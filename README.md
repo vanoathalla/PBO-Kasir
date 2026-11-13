@@ -1,4 +1,7 @@
 # WARUNGKU — Kasir Java Swing
+WARUNGKU adalah aplikasi kasir berbasis desktop yang dikembangkan menggunakan Java Swing dan MySQL. Aplikasi ini dirancang untuk membantu kasir dalam mencatat daftar barang yang dibeli, menghitung total harga, menentukan jumlah uang yang dibayarkan, serta menghitung kembalian secara otomatis. Pengguna dapat melakukan login terlebih dahulu untuk mengakses halaman utama kasir, lalu memilih metode pembayaran, menambah barang ke daftar transaksi, dan menyimpan transaksi ke database. Aplikasi juga menyediakan fitur riwayat transaksi yang memudahkan kasir dalam melihat data pembelian sebelumnya. Tampilan aplikasi dibuat lebih modern dengan konsep warna yang menarik serta layout yang lebih rapi agar lebih nyaman digunakan. Selain itu, aplikasi dilengkapi dengan validasi input agar proses transaksi menjadi lebih aman dan minim kesalahan.
+
+Teknologi yang digunakan meliputi Java, Java Swing untuk antarmuka pengguna, JDBC untuk koneksi database, dan MySQL/MariaDB sebagai penyimpanan data. Program ini dibuat untuk memudahkan proses transaksi penjualan di warung atau usaha kecil menengah dengan sistem yang sederhana namun fungsional.
 
 ## Setup database
 1. Start MySQL or MariaDB.
