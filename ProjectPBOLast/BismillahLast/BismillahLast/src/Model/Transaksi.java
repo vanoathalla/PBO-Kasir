@@ -1,16 +1,27 @@
 package Model;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 import Connector.Connector;
 import Model.Interface.InterfaceTransaksi;
 
 public class Transaksi extends Connector implements InterfaceTransaksi {
-    private int id, jumlahBarang, totalHarga, bayar, kembalian;
-    private String metode, tanggal, kasir;
-    private Statement statement;
+    private int id;
+    private int jumlahBarang;
+    private int totalHarga;
+    private int bayar;
+    private int kembalian;
+    private String metode;
+    private String tanggal;
+    private String kasir;
 
-    // Konstruktor untuk objek Transaksi
-    public Transaksi(int jumlahBarang, int totalHarga, int bayar, int kembalian, String metode, String tanggal, String kasir) {
+    public Transaksi(int jumlahBarang, int totalHarga, int bayar, int kembalian,
+            String metode, String tanggal, String kasir) {
         this.jumlahBarang = jumlahBarang;
         this.totalHarga = totalHarga;
         this.bayar = bayar;
@@ -20,191 +31,145 @@ public class Transaksi extends Connector implements InterfaceTransaksi {
         this.kasir = kasir;
     }
 
-    // Method memasukkan detail transaksi ke database
     public void insertDetailTransaksi(Barang barang) {
-        id = getLastIdTransaksi(); // Mendapatkan ID transaksi terakhir
+        if (conn == null || barang == null) {
+            return;
+        }
+        String sql = "INSERT INTO detail_transaksi "
+                + "(id_transaksi, nama_barang, harga, kuantitas, total_harga) VALUES (?, ?, ?, ?, ?)";
         try {
-            statement = conn.createStatement();
-            String query = "INSERT INTO detail_transaksi (id_transaksi, nama_barang, harga, kuantitas, total_harga) VALUES ('"
-                    + id + "', '" + barang.getNama() + "', '" + barang.getHarga() + "', '" + barang.getKuantitas()
-                    + "', '" + barang.getTotalHarga() + "')";
-            statement.executeUpdate(query); // Menjalankan query
-        } catch (Exception e) {
+            int transactionId = getLastIdTransaksi();
+            if (transactionId <= 0) {
+                return;
+            }
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, transactionId);
+                ps.setString(2, barang.getNama());
+                ps.setInt(3, barang.getHarga());
+                ps.setInt(4, barang.getKuantitas());
+                ps.setInt(5, barang.getTotalHarga());
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Method mendapatkan ID transaksi terakhir dari database
     public int getLastIdTransaksi() {
-        try {
-            statement = conn.createStatement(); 
-            String query = "SELECT MAX(id) as id FROM transaksi";
-            ResultSet rs = statement.executeQuery(query); // Menjalankan query
-            if (rs.next()) {
-                id = rs.getInt("id"); // Mengambil ID transaksi terakhir
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); 
+        if (conn == null) {
+            return 0;
         }
-        return id;
-    }
-
-    // Method mendapatkan jumlah data transaksi
-    @SuppressWarnings("finally")
-    private int getJumlahDataTransaksi(){
-        int jumlah = 0;
-        try {
-            statement = conn.createStatement();
-            String query = "SELECT COUNT(*) as jumlah FROM transaksi";
-            ResultSet rs = statement.executeQuery(query); // Menjalankan query
-            if(rs.next()){
-                jumlah = rs.getInt("jumlah"); 
-            }
-        } catch (Exception e) {
+        try (Statement statement = conn.createStatement();
+                ResultSet rs = statement.executeQuery("SELECT MAX(id) AS id FROM transaksi")) {
+            return rs.next() ? rs.getInt("id") : 0;
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally{
-            return jumlah;
+            return 0;
         }
     }
 
-    // Method mendapatkan jumlah data detail transaksi berdasarkan ID transaksi
-    @SuppressWarnings("finally")
-    private int getJumlahDataDetail(int id){
-        int jumlah = 0;
-        try {
-            statement = conn.createStatement();
-            String query = "SELECT COUNT(*) as jumlah FROM detail_transaksi WHERE id_transaksi = '" + id + "'";
-            ResultSet rs = statement.executeQuery(query);
-            if(rs.next()){
-                jumlah = rs.getInt("jumlah");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally{
-            return jumlah;
-        }
-    }
-
-    // Method membaca data transaksi dari database
-    @SuppressWarnings("finally")
     public String[][] readData() {
-        int jumlah = getJumlahDataTransaksi(); // Mendapatkan jumlah data transaksi
-        String data[][] = new String[jumlah][8]; // Array untuk menyimpan data transaksi
-        try {
-            statement = conn.createStatement();
-            String query = "SELECT * FROM transaksi";
-            ResultSet rs = statement.executeQuery(query);
-            int i = 0;
+        List<String[]> rows = new ArrayList<>();
+        if (conn == null) {
+            return new String[0][8];
+        }
+        String sql = "SELECT id, jumlah_barang, total_harga, bayar, kembalian, metode, tanggal, kasir "
+                + "FROM transaksi ORDER BY id DESC";
+        try (Statement statement = conn.createStatement(); ResultSet rs = statement.executeQuery(sql)) {
             while (rs.next()) {
-                data[i][0] = rs.getString("id");
-                data[i][1] = rs.getString("jumlah_barang");
-                data[i][2] = rs.getString("total_harga");
-                data[i][3] = rs.getString("bayar");
-                data[i][4] = rs.getString("kembalian");
-                data[i][5] = rs.getString("metode");
-                data[i][6] = rs.getString("tanggal");
-                data[i][7] = rs.getString("kasir");
-                i++;
+                rows.add(new String[] {
+                    rs.getString("id"), rs.getString("jumlah_barang"), rs.getString("total_harga"),
+                    rs.getString("bayar"), rs.getString("kembalian"), rs.getString("metode"),
+                    rs.getString("tanggal"), rs.getString("kasir")
+                });
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            return data;
         }
+        return rows.toArray(new String[rows.size()][8]);
     }
 
-    // Method membaca detail transaksi berdasarkan ID transaksi
-    @SuppressWarnings("finally")
     public String[][] readDetail(int id) {
-        int jumlah = getJumlahDataDetail(id); // Mendapatkan jumlah data detail transaksi
-        String data[][] = new String[jumlah][4]; // Array untuk menyimpan data detail transaksi
-        try {
-            statement = conn.createStatement();
-            String query = "SELECT * FROM detail_transaksi where id_transaksi = '" + id + "'";
-            ResultSet rs = statement.executeQuery(query);
-            int i = 0;
-            while (rs.next()) {
-                data[i][0] = rs.getString("nama_barang");
-                data[i][1] = rs.getString("harga");
-                data[i][2] = rs.getString("kuantitas");
-                data[i][3] = rs.getString("total_harga");
-                i++;
+        List<String[]> rows = new ArrayList<>();
+        if (conn == null) {
+            return new String[0][4];
+        }
+        String sql = "SELECT nama_barang, harga, kuantitas, total_harga "
+                + "FROM detail_transaksi WHERE id_transaksi = ? ORDER BY id";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    rows.add(new String[] { rs.getString("nama_barang"), rs.getString("harga"),
+                        rs.getString("kuantitas"), rs.getString("total_harga") });
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            return data;
         }
+        return rows.toArray(new String[rows.size()][4]);
     }
 
-    // Method mendapatkan informasi transaksi berdasarkan ID transaksi
-    @SuppressWarnings("finally")
-    public String[] infoTransaksi(int id){
-        String data[] = new String[6]; // Array untuk menyimpan informasi transaksi
-        try {
-            statement = conn.createStatement();
-            String query = "SELECT tanggal, metode, total_harga, bayar, kembalian, kasir FROM transaksi WHERE id = '" + id + "'";
-            ResultSet rs = statement.executeQuery(query);
-            if (rs.next()) {
-                data[0] = rs.getString("tanggal");
-                data[1] = rs.getString("metode");
-                data[2] = rs.getString("total_harga");
-                data[3] = rs.getString("bayar");
-                data[4] = rs.getString("kembalian");
-                data[5] = rs.getString("kasir");
+    public String[] infoTransaksi(int id) {
+        String[] data = new String[] { "", "", "", "", "", "" };
+        if (conn == null) {
+            return data;
+        }
+        String sql = "SELECT tanggal, metode, total_harga, bayar, kembalian, kasir FROM transaksi WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    data[0] = rs.getString("tanggal");
+                    data[1] = rs.getString("metode");
+                    data[2] = rs.getString("total_harga");
+                    data[3] = rs.getString("bayar");
+                    data[4] = rs.getString("kembalian");
+                    data[5] = rs.getString("kasir");
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally{
-            return data;
+        return data;
+    }
+
+    public void hapusTransaksi(int id) {
+        if (conn == null) {
+            return;
+        }
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM transaksi WHERE id = ?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    // Method menghapus transaksi berdasarkan ID transaksi
-    public void hapusTransaksi(int id){
-        try {
-            statement = conn.createStatement();
-            String query = "DELETE FROM transaksi WHERE id = '" + id + "'";
-            statement.executeUpdate(query);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Getter jumlah barang
     public int getJumlahBarang() {
         return jumlahBarang;
     }
 
-    // Getter total harga
     public int getTotalHarga() {
         return totalHarga;
     }
 
-    // Getter jumlah bayar
     public int getBayar() {
         return bayar;
     }
 
-    // Getter jumlah kembalian
     public int getKembalian() {
         return kembalian;
     }
 
-    // Getter metode pembayaran
     public String getMetode() {
         return metode;
     }
 
-    // Getter tanggal transaksi
     public String getDate() {
         return tanggal;
     }
 
-    // Getter nama kasir
     public String getKasir() {
         return kasir;
     }

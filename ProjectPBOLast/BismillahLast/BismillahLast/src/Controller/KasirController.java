@@ -2,7 +2,8 @@ package Controller;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.List;
 
 import Connector.Connector;
 import Model.Barang;
@@ -13,8 +14,6 @@ public class KasirController extends Connector {
 
     private ModelKasir modelKasir;
     private Transaksi transaksi;
-    private Statement statement;
-    private ResultSet rs;
 
     public KasirController(ModelKasir modelKasir) {
         this.modelKasir = modelKasir;
@@ -29,37 +28,40 @@ public class KasirController extends Connector {
     }
 
     public boolean cekLogin() {
-        if (modelKasir == null) {
+        if (modelKasir == null || conn == null) {
             return false;
         }
 
-        try {
-            String query = "SELECT * FROM kasir WHERE username = ? AND password = ?";
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setString(1, modelKasir.getUsername().trim());
-            preparedStatement.setString(2, modelKasir.getPassword());
-
-            rs = preparedStatement.executeQuery();
-
-            if (rs.next()) {
-                System.out.println("Login Sukses");
-                return true;
+        String query = "SELECT 1 FROM kasir WHERE username = ? AND password = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, modelKasir.getUsername());
+            ps.setString(2, modelKasir.getPassword());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
             }
-
-            System.out.println("Login Gagal");
-            return false;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Login gagal diproses: " + e.getMessage());
             return false;
         }
+    }
+
+    public boolean simpanTransaksi(Transaksi transaksi, List<Barang> barang) throws SQLException {
+        if (modelKasir == null) {
+            throw new SQLException("Data kasir tidak tersedia.");
+        }
+        return modelKasir.simpanTransaksi(transaksi, barang);
     }
 
     public void insertTransaksi(Transaksi transaksi) {
-        modelKasir.insertTransaksi(transaksi);
+        if (modelKasir != null) {
+            modelKasir.insertTransaksi(transaksi);
+        }
     }
 
     public void insertDetailTransaksi(Barang barang) {
-        transaksi.insertDetailTransaksi(barang);
+        if (transaksi != null) {
+            transaksi.insertDetailTransaksi(barang);
+        }
     }
 
     public String[][] daftarTransaksi() {
