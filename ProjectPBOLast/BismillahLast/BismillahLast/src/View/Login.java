@@ -1,9 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package View;
 
+import java.awt.Color;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
 import Controller.KasirController;
@@ -20,8 +18,10 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        applyModernStyle();
         setVisible(true);
         setTitle("Login");
+        setResizable(false);
     }
 
     /**
@@ -214,19 +214,77 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void applyModernStyle() {
+        Color bgDark = new Color(15, 23, 42);
+        Color panelDark = new Color(30, 41, 59);
+        Color accent = new Color(20, 184, 166);
+        Color accentStrong = new Color(13, 148, 136);
+        Color textSoft = new Color(226, 232, 240);
+        Color textMuted = new Color(148, 163, 184);
+        Color fieldBg = new Color(248, 250, 252);
+
+        getContentPane().setBackground(bgDark);
+        jPanelPassword.setBackground(bgDark);
+        jPanelPassword.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        jPanel2.setBackground(accentStrong);
+        jPanel2.setBorder(BorderFactory.createEmptyBorder(18, 12, 18, 12));
+
+        jLabel1.setForeground(new Color(248, 250, 252));
+        jLabel2.setForeground(textSoft);
+        jLabel3.setForeground(textSoft);
+        jLabel4.setForeground(textMuted);
+        jLabel5.setForeground(new Color(255, 255, 255));
+        jLabel6.setForeground(textSoft);
+        jLabel7.setForeground(textSoft);
+
+        username.setBackground(fieldBg);
+        username.setForeground(new Color(15, 23, 42));
+        username.setCaretColor(new Color(15, 23, 42));
+        username.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                BorderFactory.createEmptyBorder(8, 10, 8, 10)
+        ));
+
+        jPasswordField1.setBackground(fieldBg);
+        jPasswordField1.setForeground(new Color(15, 23, 42));
+        jPasswordField1.setCaretColor(new Color(15, 23, 42));
+        jPasswordField1.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                BorderFactory.createEmptyBorder(8, 10, 8, 10)
+        ));
+
+        btnLogin.setBackground(accent);
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setFocusPainted(false);
+        btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogin.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(accentStrong, 1),
+                BorderFactory.createEmptyBorder(10, 18, 10, 18)
+        ));
+
+        username.setToolTipText("Masukkan username");
+        jPasswordField1.setToolTipText("Masukkan password");
+    }
+
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String user = username.getText();
-        char[] passChars = jPasswordField1.getPassword(); 
+        char[] passChars = jPasswordField1.getPassword();
         String pass = new String(passChars);
+
+        if (user == null || user.trim().isEmpty() || pass == null || pass.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username dan password tidak boleh kosong!");
+            return;
+        }
+
         ModelKasir model = new ModelKasir(user, pass);
         KasirController kasir = new KasirController(model);
-        if(kasir.cekLogin()){
-            JOptionPane.showMessageDialog(null, "Login Berhasil, SEMANGATTT!");
+        if (kasir.cekLogin()) {
+            JOptionPane.showMessageDialog(this, "Login Berhasil, SEMANGATTT!");
             new MainView(model);
             this.dispose();
-        }
-        else{
-            JOptionPane.showMessageDialog(null, "Login Gagal, Username atau Password Salah!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Login Gagal, Username atau Password Salah!");
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -289,3 +347,4 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }
+

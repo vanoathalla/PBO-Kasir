@@ -1,11 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package View;
 
+import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -14,21 +13,22 @@ import Model.Barang;
 import Model.ModelKasir;
 import Model.Transaksi;
 
-import java.util.*;
-
 public class MainView extends javax.swing.JFrame {
     /**
      * Creates new form MainView
      */
     private ModelKasir modelKasir;
+
     public MainView(ModelKasir modelKasir) {
         initComponents();
         this.modelKasir = modelKasir;
+        applyModernStyle();
         setVisible(true);
         setTitle("Cashier");
-        namaKasir.setText(namaKasir.getText() + "" + modelKasir.getUsername());
+        setResizable(false);
+        namaKasir.setText(namaKasir.getText() + " " + modelKasir.getUsername());
         dateToday();
-       
+        updateTotalHarga();
     }
 
     /**
@@ -526,6 +526,121 @@ public class MainView extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void applyModernStyle() {
+        Color bgDark = new Color(15, 23, 42);
+        Color panelSoft = new Color(30, 41, 59);
+        Color panelCard = new Color(51, 65, 85);
+        Color accent = new Color(20, 184, 166);
+        Color accentDark = new Color(13, 148, 136);
+        Color textSoft = new Color(226, 232, 240);
+        Color textMuted = new Color(148, 163, 184);
+        Color fieldBg = new Color(248, 250, 252);
+
+        getContentPane().setBackground(bgDark);
+        jPanel1.setBackground(bgDark);
+        jPanel2.setBackground(accentDark);
+        jPanel3.setBackground(panelSoft);
+        jPanel4.setBackground(panelSoft);
+        jPanel5.setBackground(panelSoft);
+
+        lTotalHarga.setBackground(accentDark);
+        lTotalHarga.setForeground(Color.WHITE);
+        lTotalHarga.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(94, 234, 212), 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+
+        namaKasir.setForeground(Color.WHITE);
+        jLabel12.setForeground(Color.WHITE);
+        jLabel7.setForeground(Color.WHITE);
+
+        jLabel3.setForeground(textSoft);
+        jLabel4.setForeground(textSoft);
+        jLabel5.setForeground(textSoft);
+        jLabel8.setForeground(textSoft);
+        jLabel9.setForeground(textSoft);
+        jLabel10.setForeground(textSoft);
+        jLabel11.setForeground(textSoft);
+
+        lNama.setBackground(fieldBg);
+        lHarga.setBackground(fieldBg);
+        lKuantitas.setBackground(fieldBg);
+        lBayar.setBackground(fieldBg);
+        lKembalian.setBackground(fieldBg);
+        lTotalHarga2.setBackground(fieldBg);
+        lTanggal.setBackground(accentDark);
+
+        lNama.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+        ));
+        lHarga.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+        ));
+        lKuantitas.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+        ));
+        lBayar.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+        ));
+        lKembalian.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+        ));
+        lTotalHarga2.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(148, 163, 184), 1),
+                BorderFactory.createEmptyBorder(6, 8, 6, 8)
+        ));
+
+        styleButton(btnTambah, accent, accentDark);
+        styleButton(btnUpdate, accent, accentDark);
+        styleButton(btnHapus, new Color(239, 68, 68), new Color(220, 38, 38));
+        styleButton(btnClear, new Color(59, 130, 246), new Color(37, 99, 235));
+        styleButton(btnDftarTransaksi, new Color(168, 85, 247), new Color(147, 51, 234));
+        styleButton(btnBayar, new Color(234, 88, 12), new Color(194, 65, 12));
+        styleButton(btnCetak, accent, accentDark);
+        styleButton(btnKembaliActionPerformed, new Color(148, 163, 184), new Color(100, 116, 139));
+
+        table.setBackground(new Color(248, 250, 252));
+        table.setForeground(new Color(15, 23, 42));
+        table.setSelectionBackground(new Color(45, 212, 191));
+        table.setSelectionForeground(Color.WHITE);
+        table.setGridColor(new Color(203, 213, 225));
+        table.setRowHeight(28);
+
+        JCMetode.setBackground(new Color(248, 250, 252));
+        JCMetode.setForeground(new Color(15, 23, 42));
+        JCMetode.setBorder(BorderFactory.createLineBorder(new Color(148, 163, 184), 1));
+    }
+
+    private void styleButton(javax.swing.JButton button, Color bg, Color hoverBg) {
+        button.setBackground(bg);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
+        button.setOpaque(true);
+    }
+
+    private String formatCurrency(int value) {
+        return "Rp. " + String.format("%,d", value);
+    }
+
+    private int parseCurrencyAmount(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return 0;
+        }
+        String cleaned = value.trim().replace("Rp.", "").replace(".", "").replace(",", "").trim();
+        try {
+            return Integer.parseInt(cleaned);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     private void lTotalHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lTotalHargaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_lTotalHargaActionPerformed
@@ -533,11 +648,15 @@ public class MainView extends javax.swing.JFrame {
     private void updateTotalHarga() {
         int totalHarga = 0;
         for (int i = 0; i < table.getRowCount(); i++) {
-            totalHarga += Integer.parseInt(table.getValueAt(i, 4).toString().substring(4).replace(",", ""));
+            Object value = table.getValueAt(i, 4);
+            if (value != null) {
+                totalHarga += parseCurrencyAmount(value.toString());
+            }
         }
-        lTotalHarga.setText("Rp. " + String.format("%,d", totalHarga));
-        lTotalHarga2.setText("Rp. " + String.format("%,d", totalHarga));
+        lTotalHarga.setText(formatCurrency(totalHarga));
+        lTotalHarga2.setText(formatCurrency(totalHarga));
     }
+
     private void dateToday() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -545,28 +664,35 @@ public class MainView extends javax.swing.JFrame {
     }
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
-        String namaBarang = lNama.getText();
-        String hargaBarang = lHarga.getText();
-        String kuantitasBarang = lKuantitas.getText();
-        int nomor = table.getRowCount() + 1;
-        
-        if (namaBarang.equals("") || hargaBarang.equals("") || kuantitasBarang.equals("")) {
-            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong");
-        } else {
+        String namaBarang = lNama.getText().trim();
+        String hargaBarang = lHarga.getText().trim();
+        String kuantitasBarang = lKuantitas.getText().trim();
+
+        if (namaBarang.isEmpty() || hargaBarang.isEmpty() || kuantitasBarang.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
+            return;
+        }
+
+        try {
             int harga = Integer.parseInt(hargaBarang);
             int kuantitas = Integer.parseInt(kuantitasBarang);
-            int totalSementara = harga * kuantitas;
 
+            if (harga <= 0 || kuantitas <= 0) {
+                JOptionPane.showMessageDialog(this, "Harga dan kuantitas harus lebih dari 0");
+                return;
+            }
+
+            int totalSementara = harga * kuantitas;
             DefaultTableModel model = (DefaultTableModel) table.getModel();
-            model.addRow(new Object[] { nomor, namaBarang, "Rp. "+ String.format("%,d", harga), kuantitasBarang, "Rp. "+String.format("%,d", totalSementara), });
+            model.addRow(new Object[] { table.getRowCount() + 1, namaBarang, formatCurrency(harga), kuantitas, formatCurrency(totalSementara) });
 
             updateTotalHarga();
             lNama.setText("");
             lHarga.setText("");
             lKuantitas.setText("");
-            nomor++;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Harga dan kuantitas harus berupa angka");
         }
-         
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
@@ -575,37 +701,52 @@ public class MainView extends javax.swing.JFrame {
         if (row >= 0) {
             model.removeRow(row);
             updateTotalHarga();
-            // buat nomor barang setelahnya menjadi-1
             for (int i = 0; i < table.getRowCount(); i++) {
-                table.setValueAt(i+1, i, 0);
+                table.setValueAt(i + 1, i, 0);
             }
-            JOptionPane.showMessageDialog(null, "Data item telah berhasil dihapus");
+            JOptionPane.showMessageDialog(this, "Data item telah berhasil dihapus");
         } else {
-            JOptionPane.showMessageDialog(null, "Pilih data yang ingin dihapus");
+            JOptionPane.showMessageDialog(this, "Pilih data yang ingin dihapus");
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         int row = table.getSelectedRow();
-        if (row >= 0) {
-            String namaBarang = lNama.getText();
-            String hargaBarang = lHarga.getText();
-            String kuantitasBarang = lKuantitas.getText();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Pilih data yang akan diperbarui");
+            return;
+        }
+
+        try {
+            String namaBarang = lNama.getText().trim();
+            String hargaBarang = lHarga.getText().trim();
+            String kuantitasBarang = lKuantitas.getText().trim();
+
+            if (namaBarang.isEmpty() || hargaBarang.isEmpty() || kuantitasBarang.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Data tidak boleh kosong");
+                return;
+            }
+
             int harga = Integer.parseInt(hargaBarang);
             int kuantitas = Integer.parseInt(kuantitasBarang);
+            if (harga <= 0 || kuantitas <= 0) {
+                JOptionPane.showMessageDialog(this, "Harga dan kuantitas harus lebih dari 0");
+                return;
+            }
+
             int totalSementara = harga * kuantitas;
             model.setValueAt(namaBarang, row, 1);
-            model.setValueAt("Rp. "+hargaBarang, row, 2);
-            model.setValueAt(kuantitasBarang, row, 3);
-            model.setValueAt("Rp. "+totalSementara, row, 4);
+            model.setValueAt(formatCurrency(harga), row, 2);
+            model.setValueAt(kuantitas, row, 3);
+            model.setValueAt(formatCurrency(totalSementara), row, 4);
             updateTotalHarga();
             lNama.setText("");
             lHarga.setText("");
             lKuantitas.setText("");
-            JOptionPane.showMessageDialog(null, "Data item berhasil diperbarui");
-        } else {
-            JOptionPane.showMessageDialog(null, "Pilih data yang akan diperbarui");
+            JOptionPane.showMessageDialog(this, "Data item berhasil diperbarui");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Harga dan kuantitas harus berupa angka");
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -633,90 +774,91 @@ public class MainView extends javax.swing.JFrame {
 
     private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
         String metode = JCMetode.getSelectedItem().toString();
-        String bayar;
-        //jika debit, maka gettext bayar tidak mengambil .Rp
-        if(metode.equals("Debit")){
-            bayar = lBayar.getText().substring(4).replace(",", "");
-        }
-        else bayar = lBayar.getText();
+        String bayarText = lBayar.getText().trim();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        if (bayar.equals("")) {
-            JOptionPane.showMessageDialog(null, "Masukkan jumlah uang yang dibayarkan");
-        } 
-        else if (model.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Data item masih kosong");
-        } else {
-            int totalHarga = Integer.parseInt(lTotalHarga.getText().substring(4).replace(",", ""));
-            int bayarInt = Integer.parseInt(bayar);
-            if (bayarInt < totalHarga) {
-                JOptionPane.showMessageDialog(null, "Jumlah uang yang dibayar lebih sedikit");
-            } else {
-                int kembalian = bayarInt - totalHarga;
-                lKembalian.setText("Rp. " + String.format("%,d", kembalian));
-                lNama.setEditable(false);
-                lHarga.setEditable(false);
-                lKuantitas.setEditable(false);
-                btnUpdate.setEnabled(false);
-                btnTambah.setEnabled(false);
-                btnHapus.setEnabled(false);
-            }
+
+        if (bayarText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Masukkan jumlah uang yang dibayarkan");
+            return;
         }
+
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Data item masih kosong");
+            return;
+        }
+
+        int totalHarga = parseCurrencyAmount(lTotalHarga.getText());
+        int bayarInt;
+        try {
+            bayarInt = parseCurrencyAmount(bayarText);
+            if (bayarInt <= 0) {
+                JOptionPane.showMessageDialog(this, "Jumlah uang harus lebih dari 0");
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Format jumlah pembayaran tidak valid");
+            return;
+        }
+
+        if (bayarInt < totalHarga) {
+            JOptionPane.showMessageDialog(this, "Jumlah uang yang dibayar lebih sedikit");
+            return;
+        }
+
+        int kembalian = bayarInt - totalHarga;
+        lKembalian.setText(formatCurrency(kembalian));
+        lNama.setEditable(false);
+        lHarga.setEditable(false);
+        lKuantitas.setEditable(false);
+        btnUpdate.setEnabled(false);
+        btnTambah.setEnabled(false);
+        btnHapus.setEnabled(false);
     }//GEN-LAST:event_btnBayarActionPerformed
 
     private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         if (model.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "The item masih kosong");
-        } 
-        else if(lKembalian.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Lakukan pembayaran terlebih dahulu sebelum menyimpan transaksi");
-        }
-        else {
-            String metode = JCMetode.getSelectedItem().toString();
-            String bayar;
-            //jika debit, maka gettext bayar tidak mengambil .Rp
-            if(metode.equals("Debit")){
-                bayar = lBayar.getText().substring(4).replace(",", "");
-            }
-            else bayar = lBayar.getText();
-            int bayarInt = Integer.parseInt(bayar);
-            int jumlahBarang = model.getRowCount();
-            int totalHarga = Integer.parseInt(lTotalHarga.getText().substring(4).replace(",", ""));
-            int kembalian = Integer.parseInt(lKembalian.getText().substring(4).replace(",", ""));
-            String tanggal = lTanggal.getText();
-     
-            
-            //simpan ke transaksi
-            Transaksi transaksi = new Transaksi(jumlahBarang, totalHarga, bayarInt, kembalian, metode, tanggal, namaKasir.getText().substring(7));
-            KasirController kasirC = new KasirController(modelKasir);
-            kasirC.insertTransaksi(transaksi);
-            
-            //membuat kasir controller untuk detail transaksi
-            KasirController transC = new KasirController(transaksi);
-
-            for (int i = 0; i < model.getRowCount(); i++) {
-                String namaBarang = model.getValueAt(i, 1).toString();
-                int hargaBarang = Integer.parseInt(model.getValueAt(i, 2).toString().substring(4).replace(",", ""));
-                int kuantitas = Integer.parseInt(model.getValueAt(i, 3).toString());
-                Barang barang = new Barang(namaBarang, hargaBarang, kuantitas);
-                transC.insertDetailTransaksi(barang);
-            }
-
-            JOptionPane.showMessageDialog(null, "Transaksi berhasil disimpan");
-            lBayar.setEnabled(true);
-            lBayar.setText("");
-            lKembalian.setText("");
-            lNama.setEditable(true);
-            lHarga.setEditable(true);
-            lKuantitas.setEditable(true);
-            btnTambah.setEnabled(true);
-            btnUpdate.setEnabled(true);
-            btnHapus.setEnabled(true);
-
-            model.setRowCount(0);
-            updateTotalHarga();
+            JOptionPane.showMessageDialog(this, "The item masih kosong");
+            return;
         }
 
+        if (lKembalian.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Lakukan pembayaran terlebih dahulu sebelum menyimpan transaksi");
+            return;
+        }
+
+        String metode = JCMetode.getSelectedItem().toString();
+        int bayarInt = parseCurrencyAmount(lBayar.getText());
+        int jumlahBarang = model.getRowCount();
+        int totalHarga = parseCurrencyAmount(lTotalHarga.getText());
+        int kembalian = parseCurrencyAmount(lKembalian.getText());
+        String tanggal = lTanggal.getText();
+
+        Transaksi transaksi = new Transaksi(jumlahBarang, totalHarga, bayarInt, kembalian, metode, tanggal, namaKasir.getText().substring(9));
+        KasirController kasirC = new KasirController(modelKasir);
+        kasirC.insertTransaksi(transaksi);
+
+        KasirController transC = new KasirController(transaksi);
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String namaBarang = model.getValueAt(i, 1).toString();
+            int hargaBarang = parseCurrencyAmount(model.getValueAt(i, 2).toString());
+            int kuantitas = Integer.parseInt(model.getValueAt(i, 3).toString());
+            Barang barang = new Barang(namaBarang, hargaBarang, kuantitas);
+            transC.insertDetailTransaksi(barang);
+        }
+
+        JOptionPane.showMessageDialog(this, "Transaksi berhasil disimpan");
+        lBayar.setText("");
+        lKembalian.setText("");
+        lNama.setEditable(true);
+        lHarga.setEditable(true);
+        lKuantitas.setEditable(true);
+        btnTambah.setEnabled(true);
+        btnUpdate.setEnabled(true);
+        btnHapus.setEnabled(true);
+
+        model.setRowCount(0);
+        updateTotalHarga();
     }//GEN-LAST:event_btnCetakActionPerformed
 
     private void lHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lHargaActionPerformed
@@ -726,36 +868,35 @@ public class MainView extends javax.swing.JFrame {
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         int row = table.getSelectedRow();
-        lNama.setText(model.getValueAt(row, 1).toString());
-        lHarga.setText(model.getValueAt(row, 2).toString().substring(4).replace(",", ""));
-        lKuantitas.setText(model.getValueAt(row, 3).toString());
+        if (row >= 0) {
+            lNama.setText(model.getValueAt(row, 1).toString());
+            lHarga.setText(parseCurrencyAmount(model.getValueAt(row, 2).toString()) + "");
+            lKuantitas.setText(model.getValueAt(row, 3).toString());
+        }
     }//GEN-LAST:event_tableMouseClicked
 
     private void JCMetodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JCMetodeActionPerformed
-        //saat value yang dipilih adalah debit, maka membuat lBayar  menjadi harga total, dan tidak bisa diubah
-        if(JCMetode.getSelectedItem().equals("Debit")){
-            int totalHarga = Integer.parseInt(lTotalHarga.getText().substring(4).replace(",", ""));
-            lBayar.setText("Rp. " + String.format("%,d", totalHarga));
+        if (JCMetode.getSelectedItem().equals("Debit")) {
+            int totalHarga = parseCurrencyAmount(lTotalHarga.getText());
+            lBayar.setText(formatCurrency(totalHarga));
             lBayar.setEditable(false);
-        }
-        else{
+        } else {
             lBayar.setEditable(true);
             lBayar.setText("");
         }
     }//GEN-LAST:event_JCMetodeActionPerformed
 
     private void btnKembaliActionPerformedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformedActionPerformed
-        // TODO add your handling code here:
-    int pilihan = JOptionPane.showConfirmDialog(
-        this,
-        "Apakah Anda yakin ingin keluar?", "Konfirmasi", JOptionPane.YES_NO_OPTION
-    );
+        int pilihan = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah Anda yakin ingin keluar?", "Konfirmasi", JOptionPane.YES_NO_OPTION
+        );
 
-    if (pilihan == JOptionPane.YES_OPTION) {
-        JOptionPane.showMessageDialog(this, "See you...");
-        new Login().setVisible(true);
-        this.dispose();
-    }
+        if (pilihan == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "See you...");
+            new Login().setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_btnKembaliActionPerformedActionPerformed
 
     private void lTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lTanggalActionPerformed
@@ -828,3 +969,4 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }
+
