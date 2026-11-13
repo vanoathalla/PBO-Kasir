@@ -1,26 +1,25 @@
 package Connector;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 /**
  * Connector
  */
 public class Connector {
-    String DBurl = "jdbc:mysql://localhost/kasir";
-    String DBusername = "root";
-    String DBpassword = "";
-    public Connection conn;
-    Statement statement;
+    private static final String DBURL = "jdbc:mysql://localhost:3306/kasir?useSSL=false&serverTimezone=UTC";
+    private static final String DBUSERNAME = "root";
+    private static final String DBPASSWORD = "";
 
-    public Connector(){
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection(DBurl, DBusername, DBpassword);
+    protected Connection conn;
+
+    public Connector() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(DBURL, DBUSERNAME, DBPASSWORD);
             System.out.println("Koneksi Sukses");
-        }
-        catch(Exception ex){
-            System.out.println("failed" + ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("failed: " + ex.getMessage());
         }
     }
-    
 }

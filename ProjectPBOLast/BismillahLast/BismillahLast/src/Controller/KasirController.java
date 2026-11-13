@@ -1,6 +1,8 @@
 package Controller;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import Connector.Connector;
 import Model.Barang;
@@ -9,90 +11,70 @@ import Model.Transaksi;
 
 public class KasirController extends Connector {
 
-    // Deklarasi objek modelKasir dari class ModelKasir
     private ModelKasir modelKasir;
-
-    // Deklarasi objek transaksi dari class Transaksi
     private Transaksi transaksi;
-
-    // Statement untuk eksekusi query SQL
     private Statement statement;
-
-    // ResultSet untuk menyimpan hasil query
     private ResultSet rs;
 
-    // Konstruktor dengan parameter ModelKasir
     public KasirController(ModelKasir modelKasir) {
-        this.modelKasir = modelKasir; // Inisialisasi modelKasir
+        this.modelKasir = modelKasir;
     }
 
-    // Konstruktor dengan parameter Transaksi
     public KasirController(Transaksi transaksi) {
-        this.transaksi = transaksi; // Inisialisasi transaksi
+        this.transaksi = transaksi;
     }
 
-    // Konstruktor tanpa parameter
     public KasirController() {
-        // Inisialisasi objek transaksi dengan nilai default (0 dan string kosong)
         this.transaksi = new Transaksi(0, 0, 0, 0, "", "", "");
     }
 
-    // Method untuk melakukan pengecekan login kasir
     public boolean cekLogin() {
+        if (modelKasir == null) {
+            return false;
+        }
+
         try {
-            // Membuat statement SQL dari koneksi
-            statement = conn.createStatement();
+            String query = "SELECT * FROM kasir WHERE username = ? AND password = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, modelKasir.getUsername().trim());
+            preparedStatement.setString(2, modelKasir.getPassword());
 
-            // Menjalankan query login dari modelKasir
-            rs = statement.executeQuery(modelKasir.login());
+            rs = preparedStatement.executeQuery();
 
-            // Jika ada data yang cocok dengan username dan password
             if (rs.next()) {
-                System.out.println("Login Sukses"); // Cetak login sukses
-                return true; // Mengembalikan nilai true jika login berhasil
-            } else {
-                System.out.println("Login Gagal"); // Cetak login gagal
-                return false; // Mengembalikan nilai false jika login gagal
+                System.out.println("Login Sukses");
+                return true;
             }
+
+            System.out.println("Login Gagal");
+            return false;
         } catch (Exception e) {
-            e.printStackTrace(); // Menampilkan error jika terjadi exception
-            return false; // Mengembalikan nilai false jika terjadi error
+            e.printStackTrace();
+            return false;
         }
     }
 
-    // Method untuk menyimpan data transaksi ke database
     public void insertTransaksi(Transaksi transaksi) {
-        // Memanggil method insertTransaksi dari ModelKasir
         modelKasir.insertTransaksi(transaksi);
     }
 
-    // Method untuk menyimpan detail transaksi (barang dibeli)
-    public void insertDetailTransaksi(Barang barang){
-        // Memanggil method insertDetailTransaksi dari objek transaksi
+    public void insertDetailTransaksi(Barang barang) {
         transaksi.insertDetailTransaksi(barang);
     }
 
-    // Method untuk mengambil daftar transaksi dalam bentuk array 2 dimensi
-    public String[][] daftarTransaksi(){
-        // Memanggil method readData dari objek transaksi
+    public String[][] daftarTransaksi() {
         return transaksi.readData();
     }
 
-    // Method untuk mengambil detail transaksi berdasarkan ID transaksi
-    public String[][] detailTransaksi(int id){
-        // Memanggil method readDetail dari objek transaksi
+    public String[][] detailTransaksi(int id) {
         return transaksi.readDetail(id);
     }
 
-    // Method untuk mengambil informasi umum dari transaksi berdasarkan ID
-    public String[] infoTransaksi(int id){
-        // Memanggil method infoTransaksi dari objek transaksi
+    public String[] infoTransaksi(int id) {
         return transaksi.infoTransaksi(id);
     }
 
-    // Method untuk menghapus transaksi dari database berdasarkan ID
-    public void hapusTransaksi(int id){
-        // Memanggil method hapusTransaksi dari objek transaksi
+    public void hapusTransaksi(int id) {
         transaksi.hapusTransaksi(id);
     }
 }
